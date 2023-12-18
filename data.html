@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Display</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        #tablesContainer {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h3 {
+            color: #3498db;
+        }
+
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="showTables()">Show Results</button>
+    <button onclick="redirectToProjectUpdate()">Update Project</button>
+    <button onclick="redirectToSponsorUpdate()">Update Sponsor</button>
+    <div id="tablesContainer"></div>
+
+    <script>
+        function showTables() {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(this.responseText);
+                    displayTables(data);
+                }
+            };
+            xmlhttp.open("GET", "http://127.0.0.1:8000/getall", true);
+            xmlhttp.send();
+        }
+
+        function displayTables(data) {
+            var tablesContainer = document.getElementById('tablesContainer');
+            var resultKeys = Object.keys(data);
+
+            var categoryNames = ['Locality', 'Projects', 'Sponsor', 'Budget Allocator', 'Admin'];
+
+            for (var i = 0; i < resultKeys.length; i++) {
+                var result = data[resultKeys[i]];
+                var table = "<h3>" + categoryNames[i] + "</h3><table border='1'><tr>";
+
+                var columnNames = Object.keys(result[0]); // Get column names from the first row
+
+                for (var key in columnNames) {
+                    table += "<th>" + columnNames[key] + "</th>";
+                }
+
+                table += "</tr>";
+
+                for (var j = 0; j < result.length; j++) {
+                    var rowData = result[j];
+                    table += "<tr>";
+                    for (var key in rowData) {
+                        table += "<td>" + rowData[key] + "</td>";
+                    }
+                    table += "</tr>";
+                }
+                table += "</table>";
+                tablesContainer.innerHTML += table;
+            }
+        }
+
+        function redirectToProjectUpdate() {
+            // Redirect to the project update page
+            window.location.href = "project_update.html";
+        }
+
+        function redirectToSponsorUpdate() {
+            // Redirect to the sponsor update page
+            window.location.href = "sponserupdate.html";
+        }
+    </script>
+</body>
+
+</html>

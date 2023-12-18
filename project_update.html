@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Management</title>
+    <style>
+        /* styles.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .home-btn {
+            background-color: #2ecc71;
+        }
+
+        .home-btn:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project Management System</h1>
+
+    <div class="form-container">
+        <h2>Add Project</h2>
+        <label for="pid">Project ID:</label>
+        <input type="number" id="pid" name="pid"><br>
+
+        <label for="pname">Project Name:</label>
+        <input type="text" id="pname" name="pname"><br>
+
+        <label for="locality">Locality ID:</label>
+        <input type="number" id="locality" name="locality"><br>
+
+        <label for="admin">Admin ID:</label>
+        <input type="number" id="admin" name="admin"><br>
+
+        <label for="sponser">Sponsor ID:</label>
+        <input type="number" id="sponser" name="sponser"><br>
+
+        <button onclick="addProject()">Add Project</button>
+    </div>
+
+    <div class="form-container">
+        <h2>Update Project</h2>
+        <label for="updatePid">Project ID:</label>
+        <input type="number" id="updatePid" name="updatePid"><br>
+
+        <label for="updateValue">New Project Name:</label>
+        <input type="text" id="updateValue" name="updateValue"><br>
+
+        <button onclick="updateProject()">Update Project</button>
+    </div>
+
+    <div class="form-container">
+        <h2>Delete Project</h2>
+        <label for="deletePid">Project ID:</label>
+        <input type="number" id="deletePid" name="deletePid"><br>
+
+        <button onclick="deleteProject()">Delete Project</button>
+    </div>
+
+    <button class="home-btn" onclick="redirectToDataPage()">Home</button>
+
+    <script>
+        function addProject() {
+            const pid = document.getElementById('pid').value;
+            const pname = document.getElementById('pname').value;
+            const locality = document.getElementById('locality').value;
+            const admin = document.getElementById('admin').value;
+            const sponser = document.getElementById('sponser').value;
+
+            fetch(`http://127.0.0.1:8000/addproject?pid=${pid}&pname=${pname}&locality=${locality}&admin=${admin}&sponser=${sponser}`)
+                .then(response => response.json())
+                .then(data => alert(data.message || data.error))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateProject() {
+            const updatePid = document.getElementById('updatePid').value;
+            const updateValue = document.getElementById('updateValue').value;
+
+            fetch(`http://127.0.0.1:8000/updateproject?pid=${updatePid}&value=${updateValue}`)
+                .then(response => response.json())
+                .then(data => alert(data.message || data.error))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteProject() {
+            const deletePid = document.getElementById('deletePid').value;
+
+            fetch(`http://127.0.0.1:8000/deleteproject?pid=${deletePid}`)
+                .then(response => response.json())
+                .then(data => alert(data.message || data.error))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function redirectToDataPage() {
+            // Redirect to the data.html page (replace with your actual URL)
+            window.location.href = "data.html";
+        }
+    </script>
+</body>
+</html>
